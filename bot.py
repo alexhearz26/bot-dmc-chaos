@@ -3,6 +3,7 @@ from discord.ext import commands
 import random
 import json
 import os
+import asyncio
 
 import os
 TOKEN = os.getenv("TOKEN")
@@ -437,5 +438,72 @@ async def admin_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("❌ Non hai i permessi admin per usare questo comando.")
 
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def liveroulette(ctx):
+    data = load_data()
+
+    msg = await ctx.send("🎰 **LIVE CHAOS ROULETTE**\nPreparazione estrazione...")
+
+    # PISTA
+    for i in range(10):
+        pista = random.choice(tracks)
+        await msg.edit(content=f"🎰 **LIVE CHAOS ROULETTE**\n\n🏁 Pista: **{pista}**")
+        await asyncio.sleep(0.20 + i * 0.04)
+    data["pista_estratta"] = random.choice(tracks)
+
+    # METEO
+    for i in range(10):
+        meteo = random.choice(weather_options)
+        await msg.edit(
+            content=(
+                f"🎰 **LIVE CHAOS ROULETTE**\n\n"
+                f"🏁 Pista: **{data['pista_estratta']}**\n"
+                f"🌦️ Meteo: **{meteo}**"
+            )
+        )
+        await asyncio.sleep(0.20 + i * 0.04)
+    data["meteo_estratto"] = random.choice(weather_options)
+
+    # ORARIO
+    for i in range(10):
+        orario = random.choice(time_options)
+        await msg.edit(
+            content=(
+                f"🎰 **LIVE CHAOS ROULETTE**\n\n"
+                f"🏁 Pista: **{data['pista_estratta']}**\n"
+                f"🌦️ Meteo: **{data['meteo_estratto']}**\n"
+                f"🕒 Orario: **{orario}**"
+            )
+        )
+        await asyncio.sleep(0.20 + i * 0.04)
+    data["orario_estratto"] = random.choice(time_options)
+
+    # CHAOS
+    for i in range(10):
+        regola = random.choice(chaos_options)
+        await msg.edit(
+            content=(
+                f"🎰 **LIVE CHAOS ROULETTE**\n\n"
+                f"🏁 Pista: **{data['pista_estratta']}**\n"
+                f"🌦️ Meteo: **{data['meteo_estratto']}**\n"
+                f"🕒 Orario: **{data['orario_estratto']}**\n"
+                f"🎡 Chaos: **{regola}**"
+            )
+        )
+        await asyncio.sleep(0.20 + i * 0.04)
+    data["chaos_rule"] = random.choice(chaos_options)
+
+    save_data(data)
+
+    await msg.edit(
+        content=(
+            f"🏆 **RISULTATO FINALE LIVE CHAOS ROULETTE**\n\n"
+            f"🏁 Pista: **{data['pista_estratta']}**\n"
+            f"🌦️ Meteo: **{data['meteo_estratto']}**\n"
+            f"🕒 Orario: **{data['orario_estratto']}**\n"
+            f"🎡 Regola Chaos: **{data['chaos_rule']}**"
+        )
+    )
 
 bot.run(TOKEN)
