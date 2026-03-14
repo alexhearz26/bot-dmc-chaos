@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import random
 import json
-import os
 import asyncio
 
 import os
@@ -443,14 +442,25 @@ async def admin_error(ctx, error):
 async def liveroulette(ctx):
     data = load_data()
 
+    pista_finale = random.choice(tracks)
+    meteo_finale = random.choice(weather_options)
+    orario_finale = random.choice(time_options)
+    chaos_finale = random.choice(chaos_options)
+
     msg = await ctx.send("🎰 **LIVE CHAOS ROULETTE**\nPreparazione estrazione...")
 
     # PISTA
     for i in range(10):
         pista = random.choice(tracks)
-        await msg.edit(content=f"🎰 **LIVE CHAOS ROULETTE**\n\n🏁 Pista: **{pista}**")
+        await msg.edit(
+            content=f"🎰 **LIVE CHAOS ROULETTE**\n\n🏁 Pista: **{pista}**"
+        )
         await asyncio.sleep(0.20 + i * 0.04)
-    data["pista_estratta"] = random.choice(tracks)
+
+    await msg.edit(
+        content=f"🎰 **LIVE CHAOS ROULETTE**\n\n🏁 Pista: **{pista_finale}**"
+    )
+    await asyncio.sleep(0.8)
 
     # METEO
     for i in range(10):
@@ -458,12 +468,20 @@ async def liveroulette(ctx):
         await msg.edit(
             content=(
                 f"🎰 **LIVE CHAOS ROULETTE**\n\n"
-                f"🏁 Pista: **{data['pista_estratta']}**\n"
+                f"🏁 Pista: **{pista_finale}**\n"
                 f"🌦️ Meteo: **{meteo}**"
             )
         )
         await asyncio.sleep(0.20 + i * 0.04)
-    data["meteo_estratto"] = random.choice(weather_options)
+
+    await msg.edit(
+        content=(
+            f"🎰 **LIVE CHAOS ROULETTE**\n\n"
+            f"🏁 Pista: **{pista_finale}**\n"
+            f"🌦️ Meteo: **{meteo_finale}**"
+        )
+    )
+    await asyncio.sleep(0.8)
 
     # ORARIO
     for i in range(10):
@@ -471,13 +489,22 @@ async def liveroulette(ctx):
         await msg.edit(
             content=(
                 f"🎰 **LIVE CHAOS ROULETTE**\n\n"
-                f"🏁 Pista: **{data['pista_estratta']}**\n"
-                f"🌦️ Meteo: **{data['meteo_estratto']}**\n"
+                f"🏁 Pista: **{pista_finale}**\n"
+                f"🌦️ Meteo: **{meteo_finale}**\n"
                 f"🕒 Orario: **{orario}**"
             )
         )
         await asyncio.sleep(0.20 + i * 0.04)
-    data["orario_estratto"] = random.choice(time_options)
+
+    await msg.edit(
+        content=(
+            f"🎰 **LIVE CHAOS ROULETTE**\n\n"
+            f"🏁 Pista: **{pista_finale}**\n"
+            f"🌦️ Meteo: **{meteo_finale}**\n"
+            f"🕒 Orario: **{orario_finale}**"
+        )
+    )
+    await asyncio.sleep(0.8)
 
     # CHAOS
     for i in range(10):
@@ -485,24 +512,27 @@ async def liveroulette(ctx):
         await msg.edit(
             content=(
                 f"🎰 **LIVE CHAOS ROULETTE**\n\n"
-                f"🏁 Pista: **{data['pista_estratta']}**\n"
-                f"🌦️ Meteo: **{data['meteo_estratto']}**\n"
-                f"🕒 Orario: **{data['orario_estratto']}**\n"
+                f"🏁 Pista: **{pista_finale}**\n"
+                f"🌦️ Meteo: **{meteo_finale}**\n"
+                f"🕒 Orario: **{orario_finale}**\n"
                 f"🎡 Chaos: **{regola}**"
             )
         )
         await asyncio.sleep(0.20 + i * 0.04)
-    data["chaos_rule"] = random.choice(chaos_options)
 
+    data["pista_estratta"] = pista_finale
+    data["meteo_estratto"] = meteo_finale
+    data["orario_estratto"] = orario_finale
+    data["chaos_rule"] = chaos_finale
     save_data(data)
 
     await msg.edit(
         content=(
             f"🏆 **RISULTATO FINALE LIVE CHAOS ROULETTE**\n\n"
-            f"🏁 Pista: **{data['pista_estratta']}**\n"
-            f"🌦️ Meteo: **{data['meteo_estratto']}**\n"
-            f"🕒 Orario: **{data['orario_estratto']}**\n"
-            f"🎡 Regola Chaos: **{data['chaos_rule']}**"
+            f"🏁 Pista: **{pista_finale}**\n"
+            f"🌦️ Meteo: **{meteo_finale}**\n"
+            f"🕒 Orario: **{orario_finale}**\n"
+            f"🎡 Regola Chaos: **{chaos_finale}**"
         )
     )
 
